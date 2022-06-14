@@ -9,4 +9,10 @@ edition = "2021"
 name = "rusty"
 crate-type = ["staticlib"]
 
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+
 [dependencies]
