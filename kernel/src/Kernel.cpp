@@ -1,6 +1,7 @@
 #include <kernelUtil.h>
 
-//int testFunction(bool withValue, bool hasValue);
+#include "Rust.h"
+
 
 extern "C" void _start(BootInfo *bootInfo)
 {
@@ -9,9 +10,9 @@ extern "C" void _start(BootInfo *bootInfo)
 
     GlobalRenderer.PrintLine("Kernel Initialized Successfully", 0xFF00FF00);
 
-//    int testValue = testFunction(true, true);
+    int testValue = testFunction(true, true);
 
-//    GlobalRenderer.PrintLine("Test Vale init: ", testValue);
+    GlobalRenderer.PrintLine("Test Vale init: ");
 
     while (true) {
         asm("hlt");
