@@ -16,6 +16,7 @@ SRCDIR := src
 OBJDIR := lib
 BUILDDIR = bin
 BOOTEFI := $(GNUEFI)/x86_64/bootloader/main.efi
+RUSTSTATLIB := $(SRCDIR)/rusty/target/x86_64-unknown-uefi/release/librusty.a
 
 INCLUDES = -I$(SRCDIR)/headers
 CFLAGS += $(INCLUDES)
@@ -47,7 +48,7 @@ $(OBJDIR)/%_asm.o: $(SRCDIR)/%.asm
 
 link: 
 	@ echo ~~~~~ LINKING ~~~~~
-	$(LD) $(LDFLAGS) -o $(BUILDDIR)/kernel.elf $(OBJS)
+	$(LD) $(LDFLAGS) -o $(BUILDDIR)/kernel.elf $(OBJS) -L. $(RUSTSTATLIB)
 
 setup:
 	@mkdir $(BUILDDIR)
