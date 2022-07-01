@@ -17,7 +17,7 @@ OBJDIR := lib
 BUILDDIR = bin
 BOOTEFI := $(GNUEFI)/x86_64/bootloader/main.efi
 RUSTSTATDIR := $(SRCDIR)/rusty/target/x86_64-unknown-uefi/release
-RUSTSTATLIB = librusty
+RUSTSTATLIB := librusty
 
 INCLUDES = -I$(SRCDIR)/headers
 CFLAGS += $(INCLUDES)
@@ -28,7 +28,7 @@ SRC = $(call rwildcard,$(SRCDIR),*.cpp)
 ASMSRC = $(call rwildcard,$(SRCDIR),*.asm) 
 OBJS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRC))
 OBJS += $(patsubst $(SRCDIR)/%.asm, $(OBJDIR)/%_asm.o, $(ASMSRC))
-DIRS = $(wildcard $(SRCDIR)/*)
+DIRS = $(wildcard $(SRCDIR)/*) # unused variable
 
 kernel: $(OBJS) link
 
@@ -47,9 +47,14 @@ $(OBJDIR)/%_asm.o: $(SRCDIR)/%.asm
 	@ mkdir -p $(@D)
 	$(ASMC) $(ASMFLAGS) $^ -f elf64 -o $@
 
+$(OBJDIR)/: $(RUSTSTATDIR)/$(RUSTSTATLIB).a
+	@ echo ~~~~~ MOVIN RUST LIBRARY $^ ~~~~~
+	@ mkdir -p $(@D)
+	cp $(RUSTSTATDIR)/$(RUSTSTATLIB).a $(OBJDIR)
+
 link: 
 	@ echo ~~~~~ LINKING ~~~~~
-	$(LD) $(LDFLAGS) -o $(BUILDDIR)/kernel.elf $(OBJS) -L$(RUSTSTATDIR) -l$(RUSTSTATLIB)
+	$(LD) $(LDFLAGS) -o $(BUILDDIR)/kernel.elf $(OBJS) -L./lib -l$(RUSTSTATLIB)
 
 setup:
 	@mkdir $(BUILDDIR)

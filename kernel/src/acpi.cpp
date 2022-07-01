@@ -2,6 +2,24 @@
 
 namespace ACPI
 {
+    /**
+        This is a fucking function.
+
+        # ARGUMENTS
+        * sdtHeader - this shit idk
+        * signature - Dawson Chatfield
+
+        # returns - a fuckin void pointer you moron!
+
+        # Examples
+        ```cpp
+         object->FindTable();
+        ```
+        ```rs
+          // idk
+        ```
+        <bold>Simon I hate you!</bold>
+    */
     void* FindTable(SDTHeader* sdtHeader, char* signature)
     {
         //Amount of entries in the xsdt

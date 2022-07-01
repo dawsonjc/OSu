@@ -1,6 +1,6 @@
 #include <kernelUtil.h>
 
-#include "Rust.h"
+#include "rusty/target/x86_64-unknown-uefi/release/Rust.h"
 
 
 extern "C" void _start(BootInfo *bootInfo)
@@ -10,9 +10,9 @@ extern "C" void _start(BootInfo *bootInfo)
 
     GlobalRenderer.PrintLine("Kernel Initialized Successfully", 0xFF00FF00);
 
-    int testValue = testFunction(true, true);
+    int value = testFunction(true, true);
 
-    GlobalRenderer.PrintLine("Test Vale init: ");
+    GlobalRenderer.PrintLine("Test Vale init");
 
     while (true) {
         asm("hlt");
