@@ -24,10 +24,12 @@ CFLAGS += $(INCLUDES)
 
 rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
 
-SRC = $(call rwildcard,$(SRCDIR),*.cpp) 
-ASMSRC = $(call rwildcard,$(SRCDIR),*.asm) 
+SRC = $(call rwildcard,$(SRCDIR),*.cpp)
+ASMSRC = $(call rwildcard,$(SRCDIR),*.asm)
+RUSTSRC = $(call rwildcard,$(SRCDIR)/rusty/target/x86_64-unknown-uefi/release,*.a)
 OBJS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRC))
 OBJS += $(patsubst $(SRCDIR)/%.asm, $(OBJDIR)/%_asm.o, $(ASMSRC))
+OBJS += $(patsubst $(SRCDIR)/%.a, $(OBJDIR)/%.a, $(RUSTSRC))
 DIRS = $(wildcard $(SRCDIR)/*) # unused variable
 
 kernel: $(OBJS) link
@@ -47,12 +49,12 @@ $(OBJDIR)/%_asm.o: $(SRCDIR)/%.asm
 	@ mkdir -p $(@D)
 	$(ASMC) $(ASMFLAGS) $^ -f elf64 -o $@
 
-$(OBJDIR)/: $(RUSTSTATDIR)/$(RUSTSTATLIB).a
+$(OBJDIR)/%.a: $(SRCDIR)/%.a
 	@ echo ~~~~~ MOVIN RUST LIBRARY $^ ~~~~~
 	@ mkdir -p $(@D)
-	cp $(RUSTSTATDIR)/$(RUSTSTATLIB).a $(OBJDIR)
+	cp -f $(RUSTSTATDIR)/$(RUSTSTATLIB).a $(OBJDIR)
 
-link: 
+link:
 	@ echo ~~~~~ LINKING ~~~~~
 	$(LD) $(LDFLAGS) -o $(BUILDDIR)/kernel.elf $(OBJS) -L./lib -l$(RUSTSTATLIB)
 
